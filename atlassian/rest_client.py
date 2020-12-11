@@ -50,6 +50,7 @@ class AtlassianRestAPI(object):
         kerberos=None,
         cloud=False,
         proxies=None,
+        client_certfile=None
     ):
         self.url = url
         self.username = username
@@ -62,12 +63,15 @@ class AtlassianRestAPI(object):
         self.advanced_mode = advanced_mode
         self.cloud = cloud
         self.proxies = proxies
+        self.client_certfile = client_certfile
         if session is None:
             self._session = requests.Session()
         else:
             self._session = session
         if username and password:
             self._create_basic_session(username, password)
+            if client_certfile:
+                self._session.cert = client_certfile
         elif oauth is not None:
             self._create_oauth_session(oauth)
         elif kerberos is not None:
